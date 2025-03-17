@@ -1,0 +1,35 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "This is the api built for smart-cycle-market",
+  "main": "index.js",
+  "scripts": {
+    "dev": "tsnd --respawn -r tsconfig-paths/register --transpile-only ./src/index.ts",
+    "build": "tsc && tsc-alias",
+    "start": "node ./dist"
+  },
+  "author": "Ngabo Mbaraga Eric",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "express": "^4.21.2",
+    "express-async-errors": "^3.1.1",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.10.0",
+    "mongoose-silo": "^1.0.2",
+    "nodemailer": "^6.9.16",
+    "sendmail-nodemailer": "^1.1.0",
+    "server": "file:",
+    "ts-node-dev": "^2.0.0",
+    "tsc-alias": "^1.8.10",
+    "tsconfig-paths": "^4.2.0",
+    "yup": "^1.6.1"
+  },
+  "devDependencies": {
+    "@types/bcrypt": "^5.0.2",
+    "@types/express": "^5.0.0",
+    "@types/jsonwebtoken": "^9.0.7",
+    "@types/node": "^22.10.1",
+    "@types/nodemailer": "^6.4.17"
+  }
+}

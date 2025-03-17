@@ -1,0 +1,23 @@
+
+{
+    "compilerOptions": {
+        "module": "CommonJS",
+        "target": "ES2016",
+        "strict": true,
+        "esModuleInterop": true,
+        "forceConsistentCasingInFileNames": true,
+        "noImplicitAny": true,
+        "removeComments":true,
+        "skipLibCheck": true,
+        "rootDir": "./src",
+        "outDir": "./dist",
+        "baseUrl": ".",
+        "paths": {
+            "src/*":["./src/*"],
+            "routes/*":["./src/routes/*"],
+            "controllers/*":["./src/controllers/*"]
+
+
+        },
+    }
+}
