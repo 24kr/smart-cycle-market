@@ -1,5 +1,6 @@
 import "express-async-errors";
 import "src/db";
+import "dotenv/config";
 import express from "express";
 import authRouter from "routes/auth";
 
