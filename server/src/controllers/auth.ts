@@ -8,6 +8,10 @@ import jwt from "jsonwebtoken";
 import mail from "src/utils/mail";
 import { request } from "http";
 
+const VERIFICATION_LINK = process.env.VERIFICATION_LINK;
+const JWT_JWT_SECRET = process.env.JWT_JWT_SECRET;
+
+
 export const createNewUser: RequestHandler =  async (req, res, next) =>{
 
         const { name, email, password } = req.body;
@@ -26,7 +30,7 @@ export const createNewUser: RequestHandler =  async (req, res, next) =>{
     const token = crypto.randomBytes(36).toString('hex')
     await authVerificationTokenModel.create({owner:user._id, token });
     // send email with verification link
-    const link = `http://localhost:8000/verify.html?id=${user._id}&token=${token}`;
+  const link = `${VERIFICATION_LINK}?id=${user._id}&token=${token}`;
 
     // Looking to send emails in production? Check out our Email API/SMTP product!
 // const transport = nodemailer.createTransport({
@@ -71,7 +75,7 @@ export const generateVerificationLink:RequestHandler = async (req, res) => {
 
   const {id} = req.user;
   const token = crypto.randomBytes(36).toString("hex");
-  const link = `http://localhost:8000/verify.html?id=${id}&token=${token}`;
+  const link = `${VERIFICATION_LINK}?id=${id}&token=${token}`;
   
   await authVerificationTokenModel.findOneAndDelete({owner: id});
 
@@ -93,9 +97,9 @@ export const signIn:RequestHandler = async (req, res) => {
   if(!isMatched) return sendErrorRes(res,"Invalid email or password",403);
 
   const payload = {id:user._id}
-  const accessToken = jwt.sign(payload, "secret", { expiresIn: "15m" });
+  const accessToken = jwt.sign(payload, "JWT_SECRET", { expiresIn: "15m" });
 
-  const refreshToken = jwt.sign(payload, "secret");
+  const refreshToken = jwt.sign(payload, "JWT_SECRET");
 
   if(!user.tokens) user.tokens = [refreshToken]
   else user.tokens.push(refreshToken)
@@ -121,7 +125,7 @@ export const grantAccessToken: RequestHandler = async (req, res) => {
   
   const {refreshToken} = req.body;
   if (!refreshToken) return sendErrorRes(res, "Unauthorized Request",403);
-  const payload = jwt.verify(refreshToken,"secret") as {id:string}
+  const payload = jwt.verify(refreshToken,"JWT_SECRET") as {id:string}
 
   if(!payload.id) return sendErrorRes(res, "Unauthorized Request!",401)
 
@@ -134,9 +138,9 @@ export const grantAccessToken: RequestHandler = async (req, res) => {
       return sendErrorRes(res, "Unauthorized Request!",403);
     }
 
-  const newAccessToken = jwt.sign({id:user._id}, "secret", { expiresIn: "15m" });
+  const newAccessToken = jwt.sign({id:user._id}, "JWT_SECRET", { expiresIn: "15m" });
 
-  const newRefreshToken = jwt.sign({id:user._id}, "secret");
+  const newRefreshToken = jwt.sign({id:user._id}, "JWT_SECRET");
 
   const filteredTokens = user.tokens.filter((t) => t!== refreshToken);
   user.tokens = filteredTokens;
@@ -165,4 +169,19 @@ export const signOut: RequestHandler = async (req, res) => {
   await user.save();
 
   res.send();
+};
+
+export const generateForgetPassLink: RequestHandler = async (req, res) => {
+  const {email} = req.body;
+  const user = await UserModel.findOne({email})
+  if(!user) return sendErrorRes(res,"Account Not Found",404);
+
+  // Remove Token
+
+  // Create New Token
+
+  // Send To The User's Email Address
+
+  // Send Back The Response
+
 };

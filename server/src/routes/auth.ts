@@ -1,5 +1,6 @@
 import { Router } from "express";
-import { createNewUser, generateVerificationLink, grantAccessToken, sendProfile, signIn, signOut, verifyEmail } from "controllers/auth";
+import { createNewUser, generateForgetPassLink, generateVerificationLink,
+     grantAccessToken, sendProfile, signIn, signOut, verifyEmail } from "controllers/auth";
 import validate from "src/middleware/validator";
 import { newUserSchema, verifyTokenSchema } from "src/utils/validationSchema";
 import { isAuth } from './../middleware/isAuth';
@@ -13,5 +14,6 @@ authRouter.post('/sign-in', signIn);
 authRouter.get('/profile', isAuth, sendProfile);
 authRouter.post('/refresh-token', grantAccessToken);
 authRouter.post('/sign-out', isAuth, signOut);
+authRouter.post('/forget-pass', generateForgetPassLink);
 
 export default authRouter;      
