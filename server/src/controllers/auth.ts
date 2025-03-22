@@ -7,10 +7,11 @@ import { sendErrorRes } from "src/utils/helper";
 import jwt from "jsonwebtoken";
 import mail from "src/utils/mail";
 import { request } from "http";
+import PasswordResetTokenModel from "src/models/passwordResetToken";
 
 const VERIFICATION_LINK = process.env.VERIFICATION_LINK;
 const JWT_JWT_SECRET = process.env.JWT_JWT_SECRET;
-
+const PASSWORD_RESET_LINK = process.env.PASSWORD_RESET_LINK;
 
 export const createNewUser: RequestHandler =  async (req, res, next) =>{
 
@@ -177,11 +178,18 @@ export const generateForgetPassLink: RequestHandler = async (req, res) => {
   if(!user) return sendErrorRes(res,"Account Not Found",404);
 
   // Remove Token
-
+  await PasswordResetTokenModel.findOneAndDelete({owner: user._id});
   // Create New Token
-
+  const token = crypto.randomBytes(36).toString("hex");
+  await PasswordResetTokenModel.create({owner: user._id, token });
   // Send To The User's Email Address
-
+  const passResetLink = `${PASSWORD_RESET_LINK}?id=${user._id}&token=${token}`
+  mail.sendPasswordResetLink(user.email, passResetLink)
   // Send Back The Response
+  res.json({message:"Please check your email for password reset link"});
 
+};
+
+export const grantValid: RequestHandler = async (req, res) => {
+  res.json({valid: true});  
 };

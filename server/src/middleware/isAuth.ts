@@ -2,6 +2,7 @@ import { RequestHandler } from "express";
 import { sendErrorRes } from "src/utils/helper";
 import jwt, {JsonWebTokenError, TokenExpiredError} from "jsonwebtoken";
 import UserModel from "src/models/user";
+import PasswordResetTokenModel from "src/models/passwordResetToken";
 
 interface UserProfile{
     id: string;
@@ -49,5 +50,20 @@ catch(error){
     }
 }
 
+
+};
+
+export const isValidPassResetToken: RequestHandler = async (req, res, next) => {
+
+    const {id, token} = req.body;
+    const resetPassToken = await PasswordResetTokenModel.findOne({owner: id})
+    if(!resetPassToken)
+        return sendErrorRes(res, "Invalid password reset token", 403);
+
+    const matched = await resetPassToken.compareToken(token);
+    if(!matched)
+        return sendErrorRes(res, "Invalid password reset token", 403);
+
+    next();
 
 };
