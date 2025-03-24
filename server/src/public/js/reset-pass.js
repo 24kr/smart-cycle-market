@@ -1,5 +1,6 @@
-const form = window.getElementById('form');
-const messageTag = window.getElementById('message');
+const form = document.getElementById('form');
+const messageTag = document.getElementById('message');
+
 form.style.display="none";
  
 window.addEventListener("DOMContentLoaded", async()=>
@@ -9,7 +10,7 @@ window.addEventListener("DOMContentLoaded", async()=>
             return searchParams.get(prop);
         },
     });
-    const token = params.token;
+    const token = params.token; 
     const id = params.id;
 
    const res = await fetch('/auth/verify-pass-reset-token', {
@@ -18,13 +19,14 @@ window.addEventListener("DOMContentLoaded", async()=>
     headers: {
         'Content-Type': 'application/json;charset=utf-8',
     },
-   })
+   });
+
    if(!res.ok){
-    const{message} = await res.json();
+    const {message} = await res.json();
     messageTag.innerText = message;
     messageTag.classList.add('error')
     return;
    }
-    form.style.display="block";
-    messageTag.style.display="none";
+   messageTag.style.display="none";
+   form.style.display="block";
 });

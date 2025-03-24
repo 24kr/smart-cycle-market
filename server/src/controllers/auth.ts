@@ -193,3 +193,20 @@ export const generateForgetPassLink: RequestHandler = async (req, res) => {
 export const grantValid: RequestHandler = async (req, res) => {
   res.json({valid: true});  
 };
+
+export const updatePassword: RequestHandler = async (req, res) => {
+  
+  const {id, password} = req.body;
+
+  const user = await UserModel.findById(id);
+  if(!user) return sendErrorRes(res,"User Not Found",403); 
+
+  const matched = await user.comparePassword(password)
+  if(matched) return sendErrorRes(res,"The new password matches the old password!",422);
+
+  user.password = password;
+  await user.save();
+
+  await mail.sendPasswordUpdateMessage(user.email);
+  res.json({message:"Password was successfully updated!"})
+};

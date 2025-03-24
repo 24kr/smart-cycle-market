@@ -28,9 +28,20 @@ const sendPasswordResetLink = async (email: string, link: string) => {
 
 }
 
+const sendPasswordUpdateMessage = async (email: string) => {
+
+  await transport.sendMail({
+    from: "security@myapp.com",
+    to: email,
+    html: `<h1>Your password is now updated, you can use it to login</h1>`
+  })
+
+}
+
 const mail = {
     sendVerification,
-  sendPasswordResetLink
+  sendPasswordResetLink,
+  sendPasswordUpdateMessage
 }
 
 export default mail;
