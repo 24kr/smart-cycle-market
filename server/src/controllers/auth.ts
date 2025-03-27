@@ -10,7 +10,7 @@ import { request } from "http";
 import PasswordResetTokenModel from "src/models/passwordResetToken";
 
 const VERIFICATION_LINK = process.env.VERIFICATION_LINK;
-const JWT_JWT_SECRET = process.env.JWT_JWT_SECRET;
+const JWT_SECRET = process.env.JWT_SECRET;
 const PASSWORD_RESET_LINK = process.env.PASSWORD_RESET_LINK;
 
 export const createNewUser: RequestHandler =  async (req, res, next) =>{
@@ -209,4 +209,17 @@ export const updatePassword: RequestHandler = async (req, res) => {
 
   await mail.sendPasswordUpdateMessage(user.email);
   res.json({message:"Password was successfully updated!"})
+};
+
+export const updateProfile: RequestHandler = async (req, res) => {
+
+  const {name} = req.body;
+
+  if (typeof name !== "string" || name.trim().length < 3 ){
+    return sendErrorRes(res, "Name should be a string with at least 3 characters", 422);
+  }
+
+  await UserModel.findByIdAndUpdate(req.user.id, {name})
+
+  res.json({ profile: {...req.user, name}})
 };

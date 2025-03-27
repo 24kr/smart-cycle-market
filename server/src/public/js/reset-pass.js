@@ -48,7 +48,7 @@ const handleSubmit = async (evt) => {
         return displayNotification("Invalid Password! It must be at least 8 characters long with alpha-numeric and special character", "error")
     }
 
-    if (!password.value !== confirmPassword.value) {
+    if (password.value !== confirmPassword.value) {
         return displayNotification("Password do not matches", "error")
     }
 
