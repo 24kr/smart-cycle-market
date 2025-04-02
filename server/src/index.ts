@@ -3,6 +3,8 @@ import "src/db";
 import "dotenv/config";
 import express from "express";
 import authRouter from "routes/auth";
+import formidable from "formidable";
+import path from "path";
 
 const app = express();
 
@@ -13,6 +15,14 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 app.use("/auth", authRouter);
+app.post("/upload-file", async (req, res) => {
+   const form =  formidable({
+        multiples: true,
+        uploadDir:path.join(__dirname,'public')
+    });
+    await form.parse(req)
+    res.send("Ok");
+})
 
 app.use(function(err,req, res, next){
     res.status(500).json({massage: err.message});

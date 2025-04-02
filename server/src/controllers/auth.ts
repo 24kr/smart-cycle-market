@@ -70,7 +70,7 @@ export const verifyEmail:RequestHandler = async (req, res) => {
   await authVerificationTokenModel.findByIdAndDelete(authToken._id);
 
   res.json({message:"Thanks for joining us, your email verified successfully"});
-};
+}; 
 
 export const generateVerificationLink:RequestHandler = async (req, res) => {
 
@@ -219,7 +219,7 @@ export const updateProfile: RequestHandler = async (req, res) => {
     return sendErrorRes(res, "Name should be a string with at least 3 characters", 422);
   }
 
-  await UserModel.findByIdAndUpdate(req.user.id, {name})
+  await UserModel.findByIdAndUpdate(req.user.id, {name});
 
-  res.json({ profile: {...req.user, name}})
+  res.json({ profile: {...req.user, name}});
 };

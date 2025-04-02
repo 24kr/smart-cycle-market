@@ -1,4 +1,4 @@
-{
+ {
   "name": "server",
   "version": "1.0.0",
   "description": "This is the api built for smart-cycle-market",
@@ -11,15 +11,18 @@
   "author": "Ngabo Mbaraga Eric",
   "license": "ISC",
   "dependencies": {
+    "@types/formidable": "^3.4.5",
     "bcrypt": "^5.1.1",
     "dotenv": "^16.4.7",
     "dotignore": "^0.1.2",
     "express": "^4.21.2",
     "express-async-errors": "^3.1.1",
+    "formidable": "^3.5.2",
     "gitignore": "^0.7.0",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.10.0",
     "mongoose-silo": "^1.0.2",
+    "multer": "^1.4.5-lts.2",
     "nodemailer": "^6.9.16",
     "sendmail-nodemailer": "^1.1.0",
     "server": "file:",
