@@ -2,10 +2,12 @@ import { Router } from "express";
 import { createNewUser, generateForgetPassLink, generateVerificationLink,
      grantAccessToken, updatePassword, sendProfile, signIn, signOut, verifyEmail, 
      grantValid,
-     updateProfile} from "controllers/auth";
+     updateProfile,
+     updateAvatar} from "controllers/auth";
 import validate from "src/middleware/validator";
 import { newUserSchema, resetPassSchema, verifyTokenSchema } from "src/utils/validationSchema";
 import { isAuth, isValidPassResetToken } from './../middleware/isAuth';
+import fileParser from "src/middleware/fileParser";
 
 const authRouter=Router();
 
@@ -20,5 +22,6 @@ authRouter.post('/forget-pass', generateForgetPassLink);
 authRouter.post('/verify-pass-reset-token', validate(verifyTokenSchema), isValidPassResetToken, grantValid);
 authRouter.post('/reset-pass', validate(resetPassSchema), isValidPassResetToken, updatePassword);
 authRouter.patch('/update-profile', isAuth, updateProfile);
+authRouter.patch('/update-avatar', fileParser, updateAvatar);
 
 export default authRouter;      

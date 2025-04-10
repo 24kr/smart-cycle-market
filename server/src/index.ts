@@ -17,8 +17,11 @@ app.use(express.urlencoded({ extended: false }));
 app.use("/auth", authRouter);
 app.post("/upload-file", async (req, res) => {
    const form =  formidable({
-        multiples: true,
-        uploadDir:path.join(__dirname,'public')
+        // multiples: true,
+        uploadDir:path.join(__dirname,'public'),
+        filename(name, ext, part, form) {
+            return Date.now() + "_" + part.originalFilename;
+        }
     });
     await form.parse(req)
     res.send("Ok");

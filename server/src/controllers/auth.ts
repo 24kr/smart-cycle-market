@@ -6,12 +6,22 @@ import authVerificationTokenModel from "src/models/authVerificationToken";
 import { sendErrorRes } from "src/utils/helper";
 import jwt from "jsonwebtoken";
 import mail from "src/utils/mail";
-import { request } from "http";
-import PasswordResetTokenModel from "src/models/passwordResetToken";
+import { v2 as cloudinary } from "cloudinary"
 
 const VERIFICATION_LINK = process.env.VERIFICATION_LINK;
-const JWT_SECRET = process.env.JWT_SECRET;
-const PASSWORD_RESET_LINK = process.env.PASSWORD_RESET_LINK;
+const JWT_SECRET = process.env.JWT_SECRET!;
+const PASSWORD_RESET_LINK = process.env.PASSWORD_RESET_LINK!;
+const CLOUD_NAME = process.env.CLOUD_NAME!;
+const CLOUD_KEY = process.env.CLOUD_KEY!;
+const CLOUD_SECRET = process.env.CLOUD_SECRET!;
+
+cloudinary.config({
+  cloud_name: CLOUD_NAME,
+  api_key: CLOUD_KEY,
+  api_secret: CLOUD_SECRET,
+  secure: true,
+});
+
 
 export const createNewUser: RequestHandler =  async (req, res, next) =>{
 
@@ -222,4 +232,27 @@ export const updateProfile: RequestHandler = async (req, res) => {
   await UserModel.findByIdAndUpdate(req.user.id, {name});
 
   res.json({ profile: {...req.user, name}});
+};
+
+export const updateAvatar: RequestHandler = async (req, res) => {
+
+  const {avatar} = req.files;
+  if (Array.isArray(avatar)){
+    return sendErrorRes(res, "Please upload a single file", 422);
+  }
+  
+  if(!avatar.mimetype?.startsWith("image")){
+    return sendErrorRes(res, "Invalid image file!", 422);
+  }
+
+  const user = await UserModel.findById(req.user.id);
+  if(!user) {
+    return sendErrorRes(res, "User Not Found", 404);
+  }
+
+  if(user.avatar?.id){
+    await mail.deleteImage(user.avatar.id);
+  }
+
+  res.json({})
 };
