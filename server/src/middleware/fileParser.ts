@@ -1,6 +1,16 @@
 import { RequestHandler } from "express";
 import formidable from "formidable";
 
+declare global {
+  namespace Express {
+    interface Request {
+      files?: {
+        [fieldname: string]: formidable.File | formidable.File[];
+      };
+    }
+  }
+}
+
 const fileParser: RequestHandler = async (req, res, next) => {
 
     const form = formidable();

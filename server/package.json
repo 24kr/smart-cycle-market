@@ -13,7 +13,7 @@
   "dependencies": {
     "@types/formidable": "^3.4.5",
     "bcrypt": "^5.1.1",
-    "cloudinary": "^2.6.0",
+    "cloudinary": "^2.6.1",
     "dotenv": "^16.4.7",
     "dotignore": "^0.1.2",
     "express": "^4.21.2",

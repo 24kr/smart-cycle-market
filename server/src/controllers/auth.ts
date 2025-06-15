@@ -3,6 +3,7 @@ import UserModel from "src/models/user";
 import crypto from "crypto";
 import nodemailer from 'nodemailer';
 import authVerificationTokenModel from "src/models/authVerificationToken";
+import PasswordResetTokenModel from "src/models/passwordResetToken";
 import { sendErrorRes } from "src/utils/helper";
 import jwt from "jsonwebtoken";
 import mail from "src/utils/mail";
@@ -236,7 +237,11 @@ export const updateProfile: RequestHandler = async (req, res) => {
 
 export const updateAvatar: RequestHandler = async (req, res) => {
 
-  const {avatar} = req.files;
+  if (!req.files || !('avatar' in req.files)) {
+    return sendErrorRes(res, "Avatar file is required", 422);
+  }
+  const { avatar } = req.files as { [fieldname: string]: any };
+
   if (Array.isArray(avatar)){
     return sendErrorRes(res, "Please upload a single file", 422);
   }
@@ -251,8 +256,11 @@ export const updateAvatar: RequestHandler = async (req, res) => {
   }
 
   if(user.avatar?.id){
-    await mail.deleteImage(user.avatar.id);
+    await cloudinary.uploader.destroy(user.avatar.id); 
   }
+
+  const cloudRes = await cloudinary.uploader.upload(avatar.filepath);
+  console.log(cloudRes);
 
   res.json({})
 };
